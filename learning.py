@@ -47,13 +47,13 @@ def perform_qlearning_step(policy_net, target_net, optimizer, replay_buffer, bat
     obs_batch, act_batch, rew_batch, next_obs_batch, done_mask = replay_buffer.sample(batch_size)
     q_values = policy_net.forward(obs_batch)
     max_target_q = target_net(next_obs_batch).max(1)[0].detach() # detach is also like making a copy
-    max_target_q *= torch.from_numpy(done_mask==0)
+    max_target_q *= torch.from_numpy(done_mask==0).to(device)
     """print("max target: ", max_target_q.unsqueeze(1))
     print("gamma: ",gamma)
     print("rew: ", rew_batch)
     print("q_val: ", q_values)"""
     
-    q_target = torch.from_numpy(rew_batch) + gamma*max_target_q
+    q_target = torch.from_numpy(rew_batch).to(device) + gamma*max_target_q
 
     loss = F.smooth_l1_loss(q_values, q_target.unsqueeze(1)) 
     loss.backward()
