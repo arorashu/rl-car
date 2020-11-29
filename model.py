@@ -61,7 +61,7 @@ class DQN(nn.Module):
         conv1 = F.relu(self.conv1(observation))
         conv2 = F.relu(self.conv2(conv1))
         conv3 = F.relu(self.conv3(conv2))
-        conv_features = conv3.view(conv3.size(0), -1)
+       	conv_features = torch.flatten(conv3, start_dim=1) 
 
         intermediate = F.relu(self.lin4(conv_features))
 
