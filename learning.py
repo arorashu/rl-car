@@ -47,22 +47,23 @@ def perform_qlearning_step(policy_net, target_net, optimizer, replay_buffer, bat
     obs_batch, act_batch, rew_batch, next_obs_batch, done_mask = replay_buffer.sample(batch_size)
     q_values = policy_net.forward(obs_batch)
     max_target_q = target_net(next_obs_batch).max(1)[0].detach() # detach is also like making a copy
+    '''
+    print("max target: ", max_target_q.shape) [N,4]
+    print("gamma: ",gamma) 
+    print("rew: ", rew_batch.shape) (N) numpy
+    print("mask: ", torch.from_numpy(done_mask==0).shape) [N]
+    print("q_val: ", q_values)
+    ''' 
     max_target_q *= torch.from_numpy(done_mask==0).to(device)
-    """print("max target: ", max_target_q.unsqueeze(1))
-    print("gamma: ",gamma)
-    print("rew: ", rew_batch)
-    print("q_val: ", q_values)"""
-    
     q_target = torch.from_numpy(rew_batch).to(device) + gamma*max_target_q
 
     loss = F.smooth_l1_loss(q_values, q_target.unsqueeze(1)) 
+    optimizer.zero_grad()
     loss.backward()
     # clips the gradient, check how this works
     torch.nn.utils.clip_grad_value_(policy_net.parameters(),1)
     optimizer.step()
-
-
-
+    return loss
 
 def update_target_net(policy_net, target_net):
     """ Update the target network
