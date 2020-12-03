@@ -19,25 +19,51 @@ In the original DL papers, they create a single agent that can play multiple Ata
 
 	> i) Why do we utilize fixed targets with a separate policy and target network?
 
+According to the Nature DQN paper, a fixed target network makes the training more stable.
 
 	> ii) Why do we sample training data from a replay memory instead of using a batch of past consecutive frames?
+
+There's two reasons for this:
+
+1. The memory is constrained, it is not reasonable to expect to store all the experience of the agent. 
+
+2. Reduce correlation amongs frames. For e.g. in our task, there is a lot of frames for which the agent is driving straight. To handle all the aspects of driving in the environment, the training data should sample well from various destributions, i.e. driving straight, turning left, sharpturns, slight turns, etc. Randomly samling from the replay memory helps us achieve this.
 
 
 ### c) Action selection (2)
 
-	> i) Why do we need to balance exploration and exploitation in a reinforcement learning agent and
-	how does the e-greedy algorithm accomplish this?
+	> i) Why do we need to balance exploration and exploitation in a reinforcement learning agent and how does the e-greedy algorithm accomplish this?
+
+We want the agent to exploit so that the agent chooses the action which can yield the most reward.
+Exploration is needed so that the agent can try out new states, which may yield a reward better than the currently known best reward. Also, the environment can be stochastic, and the reward distribution may change over time. 
+The RL agent needs to strike a goo dbalance between eploitation and exploration.
+
+epsilon-greedy algorithm is a simple method to balance exploration and exploitation by choosing between exploration and exploitation randomly, where epsilon refers to the probability of choosing to explore, exploits most of the time with a small chance of exploring.
+
+A(t) = maxQ(a) with probability 1-e,
+       any action (a) with probability e
 
 
 ### d) Training (2)
 
-	> Train a Deep Q-Learning agent using the train racing.py file with the provided default
-	parameters. Describe your observations of the training process.
+	> Train a Deep Q-Learning agent using the train racing.py file with the provided default parameters. Describe your observations of the training process.
+
+We had a few observations of the training process:
+1. The feedback loop is very long, it takes very long. Cannot determine whether the rewards are not increasing because of the slow learning of the agent, or due to an error in the loss function.
+
+2. It is hard to determine how long we must allow the agent to explore.
+
+3. Changing the hyperparameters and running the training all over again is also very time consuming.
 
 	> In particular, show the generated loss and reward curves and describe how they develop over the course of training. Some points of interest to describe should be: How quickly is the agent able to consistently achieve positive rewards? What is the relationship between the e-greedy exploration schedule and the development of the cumulative reward which the agent achieves over time?
 
+TODO
+
 	> How does the loss curve compare to the loss curve that you would expect to see on a standard supervised learning problem?
 
+The loss curve in our experiment is not smooth. In a supervised learning problem, you expect the loss to come down in a smooth manner. This makes sense, because in a supervised learning setting, you know what the ground truth is, and the model is trained on the loss from this ground truth. In a Reinforcement Learning setting, we do not know what the best actions are, the agent has to figure out the best actions by exploring the environment, and using the rewards from the environment as feedback.
+
+Also, the loss function here is the loss between the target q network (which is only updated slower) and the current policy network. The rewards are a better estimate of whether the agent is learning.
 
 
 ### e) Evaluation (2)
@@ -45,8 +71,13 @@ In the original DL papers, they create a single agent that can play multiple Ata
 > Evaluate the trained Deep Q-Learning agent by running the evaluate racing.py script. Observe the performance of the agent by running the script on your local machine. Where does the agent do well and where does it struggle?
 
 
+TODO
+
+
 > How does its performance compare to the imitation learning agent you have trained for Exercise 1? Discuss possible reasons for the observed improvement/decline in performance compared to your imitation learning agent from Exercise 1.
 
+
+TODO
 
 
 

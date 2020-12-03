@@ -28,7 +28,6 @@ class DQN(nn.Module):
         self.conv2 = nn.Conv2d(32, 64, kernel_size=4, stride=2)
         self.conv3 = nn.Conv2d(64, 64, kernel_size=3, stride=1)
         self.lin4 = nn.Linear(4096, 256)
-
         self.q_scores = nn.Linear(256, action_size)
 
 
@@ -64,7 +63,6 @@ class DQN(nn.Module):
         conv2 = F.relu(self.conv2(conv1))
         conv3 = F.relu(self.conv3(conv2))
        	conv_features = torch.flatten(conv3, start_dim=1) 
-
         intermediate = F.relu(self.lin4(conv_features))
 
         return self.q_scores(intermediate)
