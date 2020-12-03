@@ -24,7 +24,7 @@ class DQN(nn.Module):
         self.action_size = action_size
 
         # TODO: Create network
-        self.conv1 = nn.Conv2d(3, 32, kernel_size=8, stride=4)    
+        self.conv1 = nn.Conv2d(1, 32, kernel_size=8, stride=4)    
         self.conv2 = nn.Conv2d(32, 64, kernel_size=4, stride=2)
         self.conv3 = nn.Conv2d(64, 64, kernel_size=3, stride=1)
         self.lin4 = nn.Linear(4096, 256)
@@ -49,14 +49,16 @@ class DQN(nn.Module):
         # TODO: Forward pass through the network
         
         # convert to grayscale and reshape
-        observation = torch.from_numpy(observation).to(self.device)
         batch_size = observation.shape[0]
-        """rgb_weights = [0.2989, 0.5870, 0.1140]
+        rgb_weights = [0.2989, 0.5870, 0.1140]
         observation = np.dot(observation[...,:3], rgb_weights)
-        observation = observation.reshape(batch_size, 1, 96, 96) / 255"""
+        observation = observation.reshape(batch_size, 1, 96, 96) / 255
+        # print(f"obs shape: {observation.shape}")
+        # print(f"obs: {observation}")
+        observation = torch.from_numpy(observation).to(self.device, dtype=torch.float)
 
         # reshape to bring channels last to first
-        observation = observation.permute(0, 3, 1, 2) 
+        # observation = observation.permute(0, 3, 1, 2) 
 
         conv1 = F.relu(self.conv1(observation))
         conv2 = F.relu(self.conv2(conv1))
