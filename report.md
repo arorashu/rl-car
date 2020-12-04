@@ -59,6 +59,13 @@ We had a few observations of the training process:
 
 TODO
 
+### Agent rewards plot
+![Reward curve] (plots-1/episode_rewards-agent.png)
+
+### Agent training loss plot
+![Loss curve] (plots-1/training_losses-agent.png)
+
+
 	> How does the loss curve compare to the loss curve that you would expect to see on a standard supervised learning problem?
 
 The loss curve in our experiment is not smooth. In a supervised learning problem, you expect the loss to come down in a smooth manner. This makes sense, because in a supervised learning setting, you know what the ground truth is, and the model is trained on the loss from this ground truth. In a Reinforcement Learning setting, we do not know what the best actions are, the agent has to figure out the best actions by exploring the environment, and using the rewards from the environment as feedback.
@@ -68,16 +75,111 @@ Also, the loss function here is the loss between the target q network (which is 
 
 ### e) Evaluation (2)
 
-> Evaluate the trained Deep Q-Learning agent by running the evaluate racing.py script. Observe the performance of the agent by running the script on your local machine. Where does the agent do well and where does it struggle?
+> *Evaluate the trained Deep Q-Learning agent by running the evaluate racing.py script. Observe the performance of the agent by running the script on your local machine. Where does the agent do well and where does it struggle?*
+
+The agent performs well in a straight track most of the times. For tracks with slight curves, the agent takes sharp turns at high speeds. For very sharp turns, the agent brakes a lot, but manages to get through eventually.
+
+In some episodes, however, the agent just keeps braking, accumulating a negative reward, and occasionally, also skids while taking a turn at high speeds.
+
+We feel this is because of the very small action space, and with a richer action space, the agent can learn better policies (and possible quicker). We will try this in problem 3.2 (c).
+
+> *How does its performance compare to the imitation learning agent you have trained for Exercise 1?  Discuss possible reasons for the observed improvement/decline in performance compared to your imitation learning agent from Exercise 1.*
+
+**TODO**
 
 
-TODO
+
+## 3.1 Further Investigations and Extensions
+
+### a) Discount factor γ (gamma)
+> *Investigate the influence of the discount factor γ. Show reward curves that demonstrate the effect of an increase/decrease of γ from its default of 0.99 on your agent*
+
+**TODO**
+
+> *i) Why do we typically use a discount factor in reinforcement learning problems and in which
+cases would it be a problem not to use a discount factor (i.e. γ = 1)?*
+
+We use a discount factor so as to make the futire reward estimation useful mathematically. For tasks that are continuing, or non-episodic, the estimate of sum of future rewards quickly becomes infinite. 
+
+Tasks like game playing (chess, go, etc) are typically episodic. Tasks such as driving and a process control robot in a factory are non-episodic.
+
+To manage this notion of expected future rewards, we introduce *discounting*. The agent now tries to select actions such that the sum of discounted rewards it receives over the future is maximized. 
 
 
-> How does its performance compare to the imitation learning agent you have trained for Exercise 1? Discuss possible reasons for the observed improvement/decline in performance compared to your imitation learning agent from Exercise 1.
+
+### b) Action repeat parameter
+
+> *Describe the reasoning behind the use of an action repeat parameter.
+By default, this value is set to 4. What is the effect on the training progress (look at your training
+plots) and your evaluation performance if this parameter is increased or decreased? Discuss and
+interpret your findings.*
+
+**TODO**
+
+> *i) Why might it be helpful to repeat each action several times?*
+
+**TODO**
 
 
-TODO
+### c) Action space
+
+> *By default, the agent uses a 4-dimensional action set of left-turn, right-turn, brake
+and acceleration (see get action set function in action.py). Investigate the addition of a null
+action ([0,0,0]) as well as more fine-grained turning, braking or acceleration actions. What is the
+effect on the agent’s driving style as well as its evaluation score? Which additional actions lead to
+an improvement in the agent’s performance and which do not?*
+
+**TODO**
+
+> *i) Why might it not always be helpful to increase an agent’s action space?*
+
+**TODO**
+
+
+> *ii) In general, why are Deep Q-Networks limited to a discrete set of actions and what solutions
+exist to overcome this limitation?*
+
+**TODO**
+
+
+
+### d) Double Q-learning
+
+> *One problem with the standard Deep Q-Learning approach is an overesti-
+mation of Q-values. A proposed solution to this problem is the double Q-learning algorithm [3].
+Read this paper, implement the double Q-learning algorithm and evaluate its effect on the training
+and evaluation performance of your agent. Important: Make sure to include your double Q-learning
+implementation in your submitted code.*
+
+**TODO**
+
+> *i) Shortly summarize the reason for the overestimation of Q-values in a standard DQN*
+
+**TODO**
+
+
+> *ii) How does double Q-learning algorithm solve this issue?*
+
+**TODO**
+
+
+
+### d) Best Solution
+
+> *How is this agent constructed and trained?*
+
+**TODO**
+
+> *In which aspects has its performance improved over your baseline agent from Section 3.1 and where
+does it still exhibit sub-optimal behavior?*
+
+**TODO**
+
+
+> *Briefly sketch out an idea for overcoming the main remaining issue with your agent’s training or performance (this does not need to be implemented).*
+
+**TODO**
+
 
 
 
