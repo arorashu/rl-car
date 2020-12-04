@@ -45,7 +45,12 @@ def perform_qlearning_step(policy_net, target_net, optimizer, replay_buffer, bat
     """
 
     obs_batch, act_batch, rew_batch, next_obs_batch, done_mask = replay_buffer.sample(batch_size)
+    # print("act_batch : ", act_batch)
     q_values = policy_net.forward(obs_batch)
+    # print("q_val: ", q_values)
+    # ref: https://discuss.pytorch.org/t/selecting-element-on-dimension-from-list-of-indexes/36319
+    q_values = q_values[torch.arange(q_values.size(0)), torch.from_numpy(act_batch)].unsqueeze(1)
+    # print("q_val: ", q_values)
     max_target_q = target_net(next_obs_batch).max(1)[0].detach() # detach is also like making a copy
     '''
     print("max target: ", max_target_q.shape) [N,4]
