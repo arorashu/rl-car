@@ -40,6 +40,36 @@ def perform_qlearning_step(policy_net, target_net, optimizer, replay_buffer, bat
         9. Optimize the model
     """
 
+    """ loss function is:
+        Expectation[ (reward + gamma * max_a'(Q(s', s'; theta_i)) - Q(s, a; theta) )^2 ]
+    """
+
+    obs_batch, act_batch, rew_batch, next_obs_batch, done_mask = replay_buffer.sample(batch_size)
+    # print("act_batch : ", act_batch)
+    q_values = policy_net.forward(obs_batch)
+    # print("q_val: ", q_values)
+    # ref: https://discuss.pytorch.org/t/selecting-element-on-dimension-from-list-of-indexes/36319
+    q_values = q_values[torch.arange(q_values.size(0)), torch.from_numpy(act_batch)].unsqueeze(1)
+    # print("q_val: ", q_values)
+    max_target_q = target_net(next_obs_batch).max(1)[0].detach() # detach is also like making a copy
+    '''
+    print("max target: ", max_target_q.shape) [N,4]
+    print("gamma: ",gamma) 
+    print("rew: ", rew_batch.shape) (N) numpy
+    print("mask: ", torch.from_numpy(done_mask==0).shape) [N]
+    print("q_val: ", q_values)
+    ''' 
+    max_target_q *= torch.from_numpy(done_mask==0).to(device)
+    q_target = torch.from_numpy(rew_batch).to(device) + gamma*max_target_q
+
+    loss = F.smooth_l1_loss(q_values, q_target.unsqueeze(1)) 
+    optimizer.zero_grad()
+    loss.backward()
+    # clips the gradient, check how this works
+    torch.nn.utils.clip_grad_value_(policy_net.parameters(),1)
+    optimizer.step()
+    return loss
+
 def update_target_net(policy_net, target_net):
     """ Update the target network
     Parameters
@@ -51,3 +81,4 @@ def update_target_net(policy_net, target_net):
     """
 
     # TODO: Update target network
+    target_net.load_state_dict(policy_net.state_dict())

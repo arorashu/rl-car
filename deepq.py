@@ -150,6 +150,8 @@ def learn(env,
         if done:
             # Start new episode after previous episode has terminated
             print("timestep: " + str(t) + " \t reward: " + str(episode_rewards[-1]))
+            if t > learning_starts:
+                print("timestep: " + str(t) + " \t loss: " + str(training_losses[-1]))
             obs = get_state(env.reset())
             episode_rewards.append(0.0)
 
