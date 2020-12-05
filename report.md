@@ -57,10 +57,10 @@ We had a few observations of the training process:
 
 	> In particular, show the generated loss and reward curves and describe how they develop over the course of training. Some points of interest to describe should be: How quickly is the agent able to consistently achieve positive rewards? What is the relationship between the e-greedy exploration schedule and the development of the cumulative reward which the agent achieves over time?
 
-### Agent rewards plot gamma 0.99
+### Agent rewards plot
 ![Reward curve] (plots-1/episode_rewards-agent.png)
 
-### Agent training loss plot gamma 0.99
+### Agent training loss plot 
 ![Loss curve] (plots-1/training_losses-agent.png)
 
 
@@ -96,7 +96,26 @@ We feel this is because of the very small action space, and with a richer action
 ### a) Discount factor γ (gamma)
 > *Investigate the influence of the discount factor γ. Show reward curves that demonstrate the effect of an increase/decrease of γ from its default of 0.99 on your agent*
 
-**TODO**
+The discount factor controls the calculation of the future expected reward of the agent. It directly affects the loss reward calculation.
+If gamma = 1, we do not discount the future rewards, however the expected future rewards become infinite very quickly.
+if gamma = 0, then the agent is myopic, it focusses on the current rewards only.
+
+In our experiments, gamma with 0.99 achieves better average rewards compared to gamma 0.90. The plots for both are shown below.
+
+
+### Agent rewards plot gamma 0.99
+![Reward curve] (plots-1/episode_rewards-agent.png)
+
+### Agent training loss plot gamma 0.99
+![Loss curve] (plots-1/training_losses-agent.png)
+
+
+### Agent rewards plot gamma 0.90
+![Reward curve] (episode_rewards-agent-gam-0.9.png)
+
+### Agent training loss plot gamma 0.90
+![Loss curve] (training_losses-agent-gam-0.9.png)
+
 
 > *i) Why do we typically use a discount factor in reinforcement learning problems and in which
 cases would it be a problem not to use a discount factor (i.e. γ = 1)?*
@@ -106,7 +125,6 @@ We use a discount factor so as to make the futire reward estimation useful mathe
 Tasks like game playing (chess, go, etc) are typically episodic. Tasks such as driving and a process control robot in a factory are non-episodic.
 
 To manage this notion of expected future rewards, we introduce *discounting*. The agent now tries to select actions such that the sum of discounted rewards it receives over the future is maximized. 
-
 
 
 ### b) Action repeat parameter
