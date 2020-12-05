@@ -85,7 +85,11 @@ We feel this is because of the very small action space, and with a richer action
 
 > *How does its performance compare to the imitation learning agent you have trained for Exercise 1?  Discuss possible reasons for the observed improvement/decline in performance compared to your imitation learning agent from Exercise 1.*
 
-**TODO**
+1. Compared to the imitation learning agent in Exercise 1, this agent has the ability to recover from failures like getting off track. The imitation learning agent had no way to figure out how to recover from failures unless such datasets were explicitly fed to it.
+
+2. This agent also learns to drive better than human imitations in exercise 1, aka cuts corners well. Coincidentally, it probably learns to do turns similar to how we implemented the spline smoothness for turns in problem 2.
+
+3. This agent also tends to get stuck in some tracks, i.e. it does not take any actions, and also has the tendency to skid off the tracks while taking turns. This is similar to our Imitation learning agent. We believe this may again be due to the data distribution available to the agent. Even though we pick random samples from the replay memory, the distribution it picks from is skewed. There is far more samples of driving straight than turning. 
 
 
 
@@ -129,11 +133,21 @@ action ([0,0,0]) as well as more fine-grained turning, braking or acceleration a
 effect on the agent’s driving style as well as its evaluation score? Which additional actions lead to
 an improvement in the agent’s performance and which do not?*
 
-**TODO**
+We tested a 7 action space, the results of which are:
+
+## 7 action space
+### Agent rewards plot
+![Reward curve] (rewards_7_actions.png)
+
+### Agent loss plot
+![Loss curve] (loss_7_actions.png)
+
 
 > *i) Why might it not always be helpful to increase an agent’s action space?*
 
-**TODO**
+Increasing tha action space makes increases the dimensions of our Q-value function. However, this also makes the learning harder, and more difficult to converge to a good solution. Also, it will require more training time. 
+
+With more training time though, a bigger action space can theoretically achieve better performance.
 
 
 > *ii) In general, why are Deep Q-Networks limited to a discrete set of actions and what solutions
@@ -157,10 +171,16 @@ implementation in your submitted code.*
 
 **TODO**
 
+The max operator in standard Q-learning and DQN, uses the same values both to select and to evaluate an action. This makes it more likely to select overestimated values, resulting in overoptimistic value estimates. 
+van Hasselt in 2010 argued that noise in the environment can lead to overestimations even when using tabular representation, and proposed Double Q-learning as a solution.
+
 
 > *ii) How does double Q-learning algorithm solve this issue?*
 
 **TODO**
+The idea of Double Q-learning is to reduce overestimationsby decomposing the max operation in the target into actionselection and action evaluation.
+
+Although not fully decoupled, the target network in the DQN architecture provides a natural candidate for the second value function, without having to introduce additional networks.
 
 
 
