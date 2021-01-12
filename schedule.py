@@ -20,4 +20,5 @@ class LinearSchedule(object):
     def value(self, t):
         """Value of the schedule at time t"""
         fraction = min(float(t) / self.schedule_timesteps, 1.0)
+        print(f"epsilon: {self.initial_p + fraction * (self.final_p - self.initial_p)}")
         return self.initial_p + fraction * (self.final_p - self.initial_p)

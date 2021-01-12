@@ -27,8 +27,10 @@ def evaluate(env, load_path='agent.pt'):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # These are not the final evaluation seeds, do not overfit on these tracks!
-    seeds = [22597174, 68545857, 75568192, 91140053, 86018367,
-             49636746, 66759182, 91294619, 84274995, 31531469]
+    #seeds = [22597174, 68545857, 75568192, 91140053, 86018367,
+    #         49636746, 66759182, 91294619, 84274995, 31531469]
+
+    seeds = np.random.randint(0, 10e6, 10)
 
     # Build & load network
     policy_net = DQN(action_size, device).to(device)
@@ -38,7 +40,8 @@ def evaluate(env, load_path='agent.pt'):
 
     # Iterate over a number of evaluation episodes
     for i in range(10):
-        env.seed(seeds[i])
+        print(f'i: {i}, seed: {seeds[i]}, type: {type(seeds[i])}')
+        env.seed(int(seeds[i]))
         obs, done = env.reset(), False
         obs = get_state(obs)
         t = 0
@@ -53,7 +56,7 @@ def evaluate(env, load_path='agent.pt'):
             obs = get_state(obs)
             episode_rewards[-1] += rew
             t += 1
-        print('episode %d \t reward %f' % (i, episode_rewards[-1]))
+        print('episode %d \t reward %f \t seed: %d' % (i, episode_rewards[-1], int(seeds[i])))
 
     print('---------------------------')
     print(' total score: %f' % np.mean(np.array(episode_rewards)))
