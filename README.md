@@ -30,12 +30,12 @@ We use the same scheme for exploration-exploitation tradeoff as in the Deep Q le
 
 
 
-To install the gym environment<br>
+## To install the gym environment<br>
 1) extract sdc_gym.zip
 2) cd sdc_gym
 3) pip install -e .["box2d"]
 
-To run the evaluation code
+## To run the evaluation code
 1) python evaluate_racing.py score
 
 
